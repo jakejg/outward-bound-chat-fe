@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import {
   Box,
@@ -27,6 +27,24 @@ export const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isServerAwake, setIsServerAwake] = useState(false);
+
+  // Wake up the server on component mount
+  useEffect(() => {
+    const wakeUpServer = async () => {
+      try {
+        const response = await fetch(`${API_URL}/ping`);
+        if (response.ok) {
+          setIsServerAwake(true);
+          console.log('Server is awake');
+        }
+      } catch (error) {
+        console.log('Server is starting up, might take a minute...');
+      }
+    };
+
+    wakeUpServer();
+  }, []);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
@@ -146,7 +164,15 @@ export const ChatInterface: React.FC = () => {
           >
             Ask me a packing question about your upcoming mountaineering course
           </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+          {!isServerAwake && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1, mb: 2 }}>
+              <CircularProgress size={16} />
+              <Typography variant="body2" color="text.secondary">
+                Waking up the server, please wait...
+              </Typography>
+            </Box>
+          )}
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 2 }}>
             <Button
               variant="text"
               size="small"
