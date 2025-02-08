@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import {
   Box,
   Paper,
@@ -19,7 +20,7 @@ interface Message {
   timestamp: Date;
 }
 
-const API_URL = 'http://localhost:3001'; // Backend runs on port 3001
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001'; // Fallback URL if env var is not set
 
 export const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -77,9 +78,20 @@ export const ChatInterface: React.FC = () => {
   return (
     <Container maxWidth="md">
       <Paper elevation={3} sx={{ height: '80vh', display: 'flex', flexDirection: 'column', p: 2 }}>
-        <Typography variant="h5" component="h1" gutterBottom>
-          Outward Bound Chat Assistant
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+          <img 
+            src="/compass-rose.jpeg" 
+            alt="Compass Rose" 
+            style={{ 
+              width: '50px', 
+              height: '50px', 
+              objectFit: 'contain' 
+            }} 
+          />
+          <Typography variant="h5" component="h1" gutterBottom>
+            Outward Bound Chat Assistant
+          </Typography>
+        </Box>
         
         <Box sx={{ flexGrow: 1, overflow: 'auto', mb: 2 }}>
           <List>
@@ -100,7 +112,19 @@ export const ChatInterface: React.FC = () => {
                   }}
                 >
                   <ListItemText
-                    primary={message.text}
+                    primary={
+                      message.sender === 'ai' ? (
+                        <Box sx={{ 
+                          '& p': { m: 0 },
+                          '& strong': { fontWeight: 600 },
+                          '& ul, & ol': { m: 0, pl: 2 }
+                        }}>
+                          <ReactMarkdown>{message.text}</ReactMarkdown>
+                        </Box>
+                      ) : (
+                        message.text
+                      )
+                    }
                     secondary={message.timestamp.toLocaleTimeString()}
                   />
                 </Paper>
@@ -109,28 +133,41 @@ export const ChatInterface: React.FC = () => {
           </List>
         </Box>
 
-        <Box sx={{ display: 'flex', gap: 1, position: 'relative' }}>
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Type your message..."
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
-              }
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Typography 
+            variant="body1" 
+            color="text.secondary"
+            sx={{ 
+              textAlign: 'center',
+              fontStyle: 'italic',
+              mb: 1
             }}
-            disabled={isLoading}
-          />
-          <IconButton
-            color="primary"
-            onClick={handleSendMessage}
-            disabled={!inputMessage.trim() || isLoading}
           >
-            {isLoading ? <CircularProgress size={24} /> : <SendIcon />}
-          </IconButton>
+            Ask me a packing question about your upcoming mountaineering course
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 1, position: 'relative' }}>
+            <TextField
+              fullWidth
+              variant="outlined"
+              placeholder="Type your message..."
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage();
+                }
+              }}
+              disabled={isLoading}
+            />
+            <IconButton
+              color="primary"
+              onClick={handleSendMessage}
+              disabled={!inputMessage.trim() || isLoading}
+            >
+              {isLoading ? <CircularProgress size={24} /> : <SendIcon />}
+            </IconButton>
+          </Box>
         </Box>
       </Paper>
     </Container>
