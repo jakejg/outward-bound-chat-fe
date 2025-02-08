@@ -11,6 +11,7 @@ import {
   ListItem,
   ListItemText,
   CircularProgress,
+  Button
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
@@ -145,6 +146,62 @@ export const ChatInterface: React.FC = () => {
           >
             Ask me a packing question about your upcoming mountaineering course
           </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => {
+                setInputMessage("What kind of base layers should I bring?");
+              }}
+              sx={{ 
+                textTransform: 'none',
+                fontSize: '0.9rem',
+                color: 'primary.main',
+                '&:hover': {
+                  backgroundColor: 'primary.light',
+                  color: 'white'
+                }
+              }}
+            >
+              "What kind of base layers should I bring?"
+            </Button>
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => {
+                setInputMessage("Do I need a rain coat?");
+              }}
+              sx={{ 
+                textTransform: 'none',
+                fontSize: '0.9rem',
+                color: 'primary.main',
+                '&:hover': {
+                  backgroundColor: 'primary.light',
+                  color: 'white'
+                }
+              }}
+            >
+              "Do I need a rain coat?"
+            </Button>
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => {
+                setInputMessage("What can help me prepare for my course?");
+              }}
+              sx={{ 
+                textTransform: 'none',
+                fontSize: '0.9rem',
+                color: 'primary.main',
+                '&:hover': {
+                  backgroundColor: 'primary.light',
+                  color: 'white'
+                }
+              }}
+            >
+              "What can help me prepare for my course?"
+            </Button>
+          </Box>
           <Box sx={{ display: 'flex', gap: 1, position: 'relative' }}>
             <TextField
               fullWidth
