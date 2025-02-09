@@ -168,7 +168,7 @@ export const ChatInterface: React.FC = () => {
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 1, mb: 2 }}>
               <CircularProgress size={16} />
               <Typography variant="body2" color="text.secondary">
-                Waking up the server, please wait...
+                Waking up the server, please wait up to 50 seconds...
               </Typography>
             </Box>
           )}
